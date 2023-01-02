@@ -40,7 +40,8 @@ export const mockData: IMovie[] = [
 
 export const getData = async () => {
   //en funktion som vi exporterar i denna modul.
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     resolve(mockData);
+    reject([]);
   });
 };

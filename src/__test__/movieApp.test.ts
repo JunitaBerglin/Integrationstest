@@ -4,6 +4,41 @@
 import { mockData } from "../ts/services/__mocks__/movieservice";
 import * as functions from "../ts/movieApp";
 import { IMovie } from "../ts/models/Movie";
+import * as movieserviceFunctions from "../ts/services/movieservice";
+
+jest.mock("./../ts/services/movieservice");
+
+describe("createHtml", () => {
+  beforeEach(() => {
+    jest.resetModules();
+    jest.restoreAllMocks();
+  });
+
+  test("should create html for list of mockData-movies", async () => {
+    //arrange
+    let searchText = "Neverending";
+    let movies: IMovie[] = await movieserviceFunctions.getData(
+      searchText
+    );
+
+    document.body.innerHTML = `<div id="movie-container"></div>`;
+    let container: HTMLDivElement = document.getElementById(
+      "movie-container"
+    ) as HTMLDivElement;
+
+    //act
+    movieserviceFunctions.getData(searchText);
+    functions.createHtml(movies, container);
+
+    //expect
+    expect(document.querySelectorAll("h3")[2].innerHTML).toContain(
+      "Andor"
+    );
+    // expect(document.querySelectorAll("h3").length).toBe(2);
+    expect(document.querySelectorAll("div.movie").length).toBe(5);
+    document.body.innerHTML = "";
+  });
+});
 
 test("listen upon click/submit call function handleSubmit", () => {
   let spy = jest.spyOn(functions, "handleSubmit").mockReturnValue(
